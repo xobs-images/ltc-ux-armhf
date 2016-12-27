@@ -6,7 +6,7 @@ RUN \
     apk add --no-cache --virtual .build-deps \
         curl \
     && \
-    curl -SLs -o /build.zip https://github.com/xobs/codebender-test-shell/archive/use-audio-tag.zip && \
+    curl -SLs -o /build.zip https://github.com/xobs/codebender-test-shell/archive/master.zip && \
     mkdir /build && \
     cd /build && \
     unzip -q /build.zip && \
