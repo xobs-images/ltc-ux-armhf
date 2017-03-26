@@ -1,38 +1,34 @@
-ltc-ux
-========
+LtC UX
+============
 
-Web server for Love-to-Code.
+This is the web frontend for the Love-to-Code interface.  It is a simple
+Nginx server, with the added benefit of redirecting /compile to the LtC
+compiler, also running in the same Pod.
+
+Build the compiler container with:
+
+    docker build \
+          -t xobs/ltc-ux-armhf:${tag} \
+          .
+
+Make sure you have a network created specifically for ltc, to allow DNS:
+
+    docker network create ltc-net
+
+Run the web server with the following Docker arguments:
+
+    docker run \
+          -d \
+          --name ltc-ux \
+          --net=ltc-net \
+          xobs/ltc-ux-armhf:${tag}
+
+The web server will now be listening on port 80.
 
 
-Network
--------
-
-Containers refer to each other using their names.  Be sure to put everything on the same network:
-
-    docker network create ltc-network
-
-
-Image
-----------
-
-This is the server that hosts files the users see.  It runs an nginx server that simply serves static files.
-
-Build:
-
-    docker build -t xobs/ltc-ux:1.7 .
-
-Run:
-
-    docker run -d --net=ltc-network --name ltc-ux xobs/ltc-ux:1.7
-
-To do development on the frontend, check out the web page locally, and run ltc-ux with a local volume:
-
-    git clone git@github.com:xobs/codebender-test-shell.git
-    docker run -d --net=ltc-network -v $(pwd)/codebender-test-shell/app:/usr/share/nginx/html --name ltc-ux xobs/ltc-ux
-
-Using with the Compiler
+Using with LtC-Compiler
 -----------------------
 
-This image creates a link of /compile to talk to ltc-compiler.  It must be run
-on the same network as an image named "ltc-compiler".  That image must expose a
-fastcgi server on port 9000.
+The ltc-ux image expects to be able to talk to an ltc-compiler image on port
+9000.  It references this image by name, so it must be called "ltc-compiler"
+and must be available on the same network.

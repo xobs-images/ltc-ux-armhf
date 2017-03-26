@@ -1,12 +1,13 @@
-FROM nginx:1.11.5-alpine
+FROM armhfbuild/nginx:1.11.9
 
 MAINTAINER Sean Cross <xobs@kosagi.com>
 
 RUN \
-    apk add --no-cache --virtual .build-deps \
-        curl \
+    apt-get update && \
+    apt-get install -y \
+        curl unzip \
     && \
-    curl -SLs -o /build.zip https://github.com/xobs/codebender-test-shell/archive/master.zip && \
+    curl -sSL -o /build.zip https://github.com/xobs/codebender-test-shell/archive/master.zip && \
     mkdir /build && \
     cd /build && \
     unzip -q /build.zip && \
@@ -16,6 +17,6 @@ RUN \
     mv html /usr/share/nginx/ && \
     cd / && \
     rm -rf /build && \
-    apk del .build-deps
+    true
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
